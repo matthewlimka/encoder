@@ -1,0 +1,39 @@
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+*.jsdtscope
+*.MF
+.externalToolBuilders/
+*.launch
+.springBeans
+
+# Eclipse Core Resources
+.project
+.classpath
+.settings/
+
+### Maven ###
+target/
+
+### Java ###
+*.class
+
+### Log files ###
+*.log
+
+### Package Files ###
+*.jar
+*.war
+*.ear
+
+### Miscellaneous ###
+*.cache
+*.tmp
