@@ -1,53 +1,48 @@
 package com.matthewlim.EncoderApp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.stream.Stream;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 
 class EncoderTest {
 
 	private Encoder encoder;
+	private Cipher mockCipher;
 
 	@BeforeEach
 	void setUp() {
-		encoder = Encoder.getInstance();
+		mockCipher = mock(Cipher.class);
+		encoder = new Encoder(mockCipher);
 	}
 	
-	@ParameterizedTest
-	@MethodSource("encodeTestData")
-	void testEncode(char offsetCharIntValue, String expected) {
+	@Test
+	void testEncode() {
 		String plainText = "HELLO WORLD";
-		encoder.setOffset(offsetCharIntValue);
+		String encodedText = "ENCODED TEXT";
+		
+		when(mockCipher.encode(plainText)).thenReturn(encodedText);
 
-		String encodedText = encoder.encode(plainText);
-
-		assertEquals(expected, encodedText);
+		String result = encoder.encode(plainText);
+		
+		verify(mockCipher, times(1)).encode(plainText);
+		assertEquals(encodedText, result);
 	}
 	
-	@ParameterizedTest
-	@ValueSource(strings = {"BGDKKN VNQKC", "FC/GGJ RJMG.", "Z0X447 -7(4W", "5URYY1 914YQ", "*NKRRU 2UXRJ", "/IFMMP XPSME"})
-	void testDecode(String encodedText) {
-		String expected = "HELLO WORLD";
+	@Test
+	void testDecode() {
+		String encodedText = "ENCODED TEXT";
+		String plainText = "HELLO WORLD";
 
-		String decodedText = encoder.decode(encodedText);
-
-		assertEquals(expected, decodedText);
-	}
-	
-	private static Stream<Arguments> encodeTestData() {
-		return Stream.of(
-				Arguments.of('B', "BGDKKN VNQKC"),
-				Arguments.of('F', "FC/GGJ RJMG."),
-				Arguments.of('Z', "Z0X447 -7(4W"),
-				Arguments.of('5', "5URYY1 914YQ"),
-				Arguments.of('*', "*NKRRU 2UXRJ"),
-				Arguments.of('/', "/IFMMP XPSME")
-			);
+		when(mockCipher.decode(encodedText)).thenReturn(plainText);
+		
+		String result = encoder.decode(encodedText);
+		
+		verify(mockCipher, times(1)).decode(encodedText);
+		assertEquals(plainText, result);
 	}
 }
